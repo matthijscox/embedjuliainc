@@ -1,0 +1,8 @@
+name = "BasicTypes"
+uuid = "318202aa-f4c2-48b9-8361-04f47d28e38e"
+authors = ["matcox <matthijs.cox@gmail.com>"]
+version = "0.1.0"
+
+[deps]
+PackageCompiler = "9b87118b-4619-50d2-8e1e-99f35a4d4d9d"
+TOML = "fa267f1f-6049-4f14-aa54-33bafae1ed76"
