@@ -2,7 +2,8 @@
 .PHONY: all build-julia
 
 ROOT_DIR := $(abspath $(dir $(lastword $(MAKEFILE_LIST))))
-BUILD := $(ROOT_DIR)/build
+PKG_ROOT_DIR := $(ROOT_DIR)/BasicTypes
+BUILD := $(PKG_ROOT_DIR)/build
 
 JULIA ?= julia
 JULIA_DIR := $(shell $(JULIA) --startup-file=no -e 'print(dirname(Sys.BINDIR))')
@@ -16,7 +17,7 @@ VERSION := 0.1.0
 NAME := basic
 NAME_VERSION := $(NAME)-$(VERSION)
 
-DEST_DIR ?= $(NAME_VERSION)
+DEST_DIR := $(ROOT_DIR)/$(NAME_VERSION)
 OUT_DIR := $(DEST_DIR)/$(NAME)
 BIN_DIR := $(OUT_DIR)/bin
 INCLUDE_DIR = $(OUT_DIR)/include
@@ -36,8 +37,8 @@ all: build-julia
 # 	-ljulia-internal -lLLVM-11jl /boa_prd/daasperb/julia-1.6.0/lib/julia/libstdc++.so.6 
 # 	-Wl,-rpath,/boa_prd/daasperb/julia-1.6.0/lib/julia
 
-build-julia: BasicTypes/build/build.jl
-	$(JULIA) --startup-file=no --project=. -e 'using Pkg; Pkg.instantiate()'
+build-julia: $(BUILD)/build.jl $(PKG_ROOT_DIR)/src/BasicTypes.jl
+	$(JULIA) --startup-file=no --project=$(PKG_ROOT_DIR) -e 'using Pkg; Pkg.instantiate()'
 	$(JULIA) --startup-file=no --project=$(BUILD) -e 'using Pkg; Pkg.instantiate()'
 	$(JULIA) --startup-file=no --project=$(BUILD) $< $(OUT_DIR)
 
