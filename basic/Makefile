@@ -49,11 +49,11 @@ $(LIB_PATH) $(INCLUDES): $(BUILD)/build.jl $(PKG_ROOT_DIR)/src/BasicTypes.jl
 	$(JULIA) --startup-file=no --project=$(BUILD) -e 'using Pkg; Pkg.instantiate()'
 	$(JULIA) --startup-file=no --compile=all --project=$(BUILD) $< $(OUT_DIR)
 
-basic.o: $(CPP_FILE) $(INCLUDES)
+$(LIB_DIR)/basic.o: $(CPP_FILE) $(INCLUDES)
 	$(CC) $< -c -o $@ $(CFLAGS)
 
-$(MAIN): basic.o
-	$(CC) -o $@ $< $(LDFLAGS)
+$(MAIN): $(LIB_DIR)/basic.o
+	$(CC) -o $(LIB_DIR)/$@ $< $(LDFLAGS)
 
 # build cpp code and link it against the julia library
 build-cpp: $(MAIN)
