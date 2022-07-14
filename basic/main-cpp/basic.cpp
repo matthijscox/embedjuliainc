@@ -1,81 +1,15 @@
 
-#include "julia.h"
-#include "julia_init.h"
+#include <julia.h>
 #include <iostream>
 #include <iomanip>
 
-//-----------------------------------------------------------------------------------------//
-//------------------------------- Datatype declarations  ----------------------------------//
-//-----------------------------------------------------------------------------------------//
-//     Because we need the datatypes in the forward declarations we introduce them here    //
-//-----------------------------------------------------------------------------------------//
-
-struct SimpleStruct
+// to avoid name mangling we use extern C
+// google for 'name mangling and extern C in C++'
+extern "C"
 {
-    int SimpleStructId;
-};
-
-struct ChildStruct
-{
-    int ChildStructId;
-};
-
-struct ParentStruct
-{
-    int ParentStructId;
-    ChildStruct myChildStruct;
-};
-
-enum SimpleEnum
-{
-    myFirstEnumType = 1,
-    mySecondEnumType = 2,
-    myThirdEnumType = 3
-};
-
-enum ComplexEnum 
-{
-    myFirstComplexEnumType = 0,
-    mySecondComplexEnumType = -1
-};
-
-//-----------------------------------------------------------------------------------------//
-//--------------------------------- Forward declarations  ---------------------------------//
-//-----------------------------------------------------------------------------------------//
-// To satisfy the C++ compiler we need to provide forward declarations (because the actual //
-// implementations are contained in the shared object file). By default the function names //
-//              get mangled by the C++ compiler, to avoid this we use Extern "C"           //
-//-----------------------------------------------------------------------------------------//
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-    bool test_boolean(bool myBoolean);
-
-    int16_t test_int16(int16_t myInt16);
-    int32_t test_int32(int32_t myInt32);
-    int64_t test_int64(int64_t myInt64);
-    uint16_t test_uint16(uint16_t myUInt16);
-    uint32_t test_uint32(uint32_t myUInt32);
-    uint64_t test_uint64(uint64_t myUInt64);
-
-    float test_cfloat(float myFloat);
-    double test_cdouble(double myDouble);
-
-    const char* test_cstring(const char* myCString);
-
-    SimpleStruct test_struct(SimpleStruct mySimpleStruct);
-    ParentStruct test_nested_structs(ParentStruct myParentStruct);
-
-    void test_array(int* myArrayPtr, int* myArraySizePtr);
-
-    SimpleEnum test_simple_enum(SimpleEnum mySimpleEnum);
-    ComplexEnum test_complex_enum(ComplexEnum myComplexEnum);
-
-#ifdef __cplusplus
+    #include "julia_init.h"
+    #include "basic.h"
 }
-#endif
 
 //-----------------------------------------------------------------------------------------//
 //-------------------------------- Calling the Julia code  --------------------------------//
@@ -83,12 +17,9 @@ extern "C" {
 
 int main(int argc, char *argv[])
 {
-    // Setting Julia options with jl_options 
-    jl_options.compile_enabled = 0;
-    jl_options.debug_level = -1;
-
-    // Opening the Julia system image, correct path needs to be added as the first param
-    //jl_init_with_image("/boa_prd/daansper/interopctojulia", "basic.dll");
+    // Setting Julia options with jl_options
+    //jl_options.compile_enabled = 0;
+    //jl_options.debug_level = -1;
 
     init_julia(argc, argv);
 
@@ -152,7 +83,7 @@ int main(int argc, char *argv[])
     ParentStruct myParentStruct = {4, myChildStruct};
     std::cout << std::left << "C++ struct parent id: " << std::setw(1) << myParentStruct.ParentStructId << " | Julia output: " << test_nested_structs(myParentStruct).ParentStructId << std::endl;
     std::cout << std::left << "C++ struct child id: " << std::setw(2) << myParentStruct.myChildStruct.ChildStructId << " | Julia output: " << test_nested_structs(myParentStruct).myChildStruct.ChildStructId << std::endl;
-    
+
     //-------------------------------------------------------------------------------------//
     //-------------------------------------  Array  ---------------------------------------//
     //-------------------------------------------------------------------------------------//
@@ -162,7 +93,7 @@ int main(int argc, char *argv[])
     int myArray[myArraySize] = {1, 3, 7, 13, 21};
     int* myArrayPtr = &myArray[0];
     test_array(myArrayPtr, &myArraySize);
-    
+
     //-------------------------------------------------------------------------------------//
     //----------------------------------  Enumerations  -----------------------------------//
     //-------------------------------------------------------------------------------------//

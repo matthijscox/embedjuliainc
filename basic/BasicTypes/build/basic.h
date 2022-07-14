@@ -1,5 +1,35 @@
 #include <iomanip>
 
+// datatypes to be used on the interface
+struct SimpleStruct
+{
+    int SimpleStructId;
+};
+
+struct ChildStruct
+{
+    int ChildStructId;
+};
+
+struct ParentStruct
+{
+    int ParentStructId;
+    ChildStruct myChildStruct;
+};
+
+enum SimpleEnum
+{
+    myFirstEnumType = 1,
+    mySecondEnumType = 2,
+    myThirdEnumType = 3
+};
+
+enum ComplexEnum
+{
+    myFirstComplexEnumType = 0,
+    mySecondComplexEnumType = -1
+};
+
 // prototype of the C entry points in our application
 bool test_boolean(bool myBoolean);
 
@@ -14,4 +44,14 @@ uint64_t test_uint64(uint64_t myUInt64);
 float test_cfloat(float myFloat);
 double test_cdouble(double myDouble);
 
-//const char* test_cstring(const char* myCString);
+const char* test_cstring(const char* myCString);
+
+const char* test_cstring(const char* myCString);
+
+SimpleStruct test_struct(SimpleStruct mySimpleStruct);
+ParentStruct test_nested_structs(ParentStruct myParentStruct);
+
+void test_array(int* myArrayPtr, int* myArraySizePtr);
+
+SimpleEnum test_simple_enum(SimpleEnum mySimpleEnum);
+ComplexEnum test_complex_enum(ComplexEnum myComplexEnum);

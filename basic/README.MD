@@ -14,9 +14,11 @@ that pass the following datatypes between Julia and C++:
 
 ## Instructions
 
-Opening the Julia system image, the correct path needs to be added as the first param inside the main function
+You can compile using the Makefile. Make sure you have a good c++ compiler and `make` tool.
 
-    jl_init_with_image("/embedjuliainc/basic/main-cpp", "basic.dll");
-
-Update the Makefile with your location of Julia.
+In a nutshell:
+* git clone this repo in a folder
+* on windows, open cmd, cd into that folder
+* run `make` to compile a Julia library and the c++ executable
+* run the exe: `compiled/bin/basic-cpp.exe`
 

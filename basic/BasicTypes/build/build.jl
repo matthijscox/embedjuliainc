@@ -1,7 +1,7 @@
 import PackageCompiler, TOML, Pkg
 
 if length(ARGS) < 1
-    target_dir = abspath(joinpath(@__DIR__, "../../BasicTypesCompiled"))
+    target_dir = abspath(joinpath(@__DIR__, "../../compiled"))
 else
     target_dir = ARGS[1]
 end
