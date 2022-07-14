@@ -1,5 +1,6 @@
 
 #include "julia.h"
+#include "julia_init.h"
 #include <iostream>
 #include <iomanip>
 
@@ -87,7 +88,9 @@ int main(int argc, char *argv[])
     jl_options.debug_level = -1;
 
     // Opening the Julia system image, correct path needs to be added as the first param
-    jl_init_with_image("/boa_prd/daansper/interopctojulia", "basic.dll");
+    //jl_init_with_image("/boa_prd/daansper/interopctojulia", "basic.dll");
+
+    init_julia(argc, argv);
 
     if(!jl_is_initialized())
     {

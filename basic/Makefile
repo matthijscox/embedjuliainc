@@ -20,26 +20,45 @@ NAME_VERSION := $(NAME)-$(VERSION)
 DEST_DIR := $(ROOT_DIR)/$(NAME_VERSION)
 OUT_DIR := $(DEST_DIR)/$(NAME)
 BIN_DIR := $(OUT_DIR)/bin
-INCLUDE_DIR = $(OUT_DIR)/include
-LIB_DIR := $(OUT_DIR)/lib
+INCLUDE_DIR := $(OUT_DIR)/include
 
-LIB_NAME := lib$(NAME).$(DLEXT)
+CPP_DIR := $(ROOT_DIR)/main-cpp
+CPP_FILE := $(CPP_DIR)/basic.cpp
+
+LIB_DIR := $(OUT_DIR)/lib
+LIB_NAME := $(NAME).$(DLEXT)
+
+MAIN := basic-cpp
+ifeq ($(OS), Windows)
+  LIBDIR := $(BINDIR)
+  MAIN := basic-cpp.exe
+endif
+
 INCLUDES = $(INCLUDE_DIR)/julia_init.h $(INCLUDE_DIR)/$(NAME).h
 LIB_PATH := $(LIB_DIR)/$(LIB_NAME)
 
-all: build-julia
+ifneq ($(OS), Windows)
+  WLARGS := -Wl,-rpath,"$(LIBDIR)" -Wl,-rpath,"$(LIBDIR)/julia"
+endif
+CFLAGS+=-O2 -fPIE -I$(JULIA_DIR)/include/julia -I$(INCLUDE_DIR)
+LDFLAGS+=-lm -L$(LIBDIR) -ljulia $(WLARGS)
 
-# build cpp code and link it against the julia library
-# build-cpp: build-julia
-# 	g++ -o DatatypeConversionExe DatatypeConversion.cpp -L./ -lDatatypeConversion -O2 
-#     -fPIE -I/boa_prd/daasperb/julia-1.6.0/include/julia 
-# 	-L/boa_prd/daasperb/julia-1.6.0/lib -ljulia -L/boa_prd/daasperb/julia-1.6.0/lib/julia 
-# 	-ljulia-internal -lLLVM-11jl /boa_prd/daasperb/julia-1.6.0/lib/julia/libstdc++.so.6 
-# 	-Wl,-rpath,/boa_prd/daasperb/julia-1.6.0/lib/julia
+CC = g++
 
-build-julia: $(BUILD)/build.jl $(PKG_ROOT_DIR)/src/BasicTypes.jl
+all: $(LIB_PATH) $(INCLUDES) build-cpp
+
+$(LIB_PATH) $(INCLUDES): $(BUILD)/build.jl $(PKG_ROOT_DIR)/src/BasicTypes.jl
 	$(JULIA) --startup-file=no --project=$(PKG_ROOT_DIR) -e 'using Pkg; Pkg.instantiate()'
 	$(JULIA) --startup-file=no --project=$(BUILD) -e 'using Pkg; Pkg.instantiate()'
 	$(JULIA) --startup-file=no --project=$(BUILD) $< $(OUT_DIR)
+
+basic.o: $(CPP_FILE) $(INCLUDES)
+	$(CC) $< -c -o $@ $(CFLAGS)
+
+$(MAIN): basic.o
+	$(CC) -o $@ $< $(LDFLAGS) -lcg
+
+# build cpp code and link it against the julia library
+build-cpp: $(MAIN)
 
 # build-cpp: build-julia
