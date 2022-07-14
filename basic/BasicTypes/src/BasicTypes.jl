@@ -1,7 +1,9 @@
 module BasicTypes
 
-    export test_boolean, test_int16, test_int64, test_uint16, test_uint32, test_uint64
-    export test_cfloat, test_cdouble, test_cstring
+    # note that exporting is not necessary for the library, only for ease of use in generate_precompile.jl
+    export test_boolean, test_int16, test_int32, test_int64, test_uint16, test_uint32, test_uint64
+    export test_cfloat, test_cdouble, test_cstring, test_struct, test_nested_structs
+    export test_array, test_simple_enum, test_complex_enum
 
     #-----------------------------------------------------------------------------------------#
     #-------------------------------------  Booleans  ----------------------------------------#
