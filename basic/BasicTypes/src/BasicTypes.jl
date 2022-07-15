@@ -24,6 +24,12 @@ module BasicTypes
         return myInt16
     end
 
+    Base.@ccallable function test_int16_ptr(myInt16Ptr::Ptr{Int16})::Cvoid
+        myInt16 = unsafe_load(myInt16Ptr)
+        @debug "Julia received Ptr{Int16} with value: $myInt16"
+        return Cvoid()
+    end
+
     # Note that the Int32 datatype is similar to the Cint datatype
     Base.@ccallable function test_int32(myInt32::Int32)::Int32
         @debug "Julia received int32 with value: $myInt32"

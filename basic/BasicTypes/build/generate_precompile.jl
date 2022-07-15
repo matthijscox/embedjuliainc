@@ -39,4 +39,9 @@ begin
 
     test_simple_enum(BasicTypes.mySecondEnumType)
     test_complex_enum(BasicTypes.mySecondComplexEnumType)
+
+    # pointer magic for primitive values...
+    ref_val = Ref{Int16}(Int16(15))
+    int16_ptr = reinterpret(Ptr{Int16}, pointer_from_objref(ref_val))
+    BasicTypes.test_int16_ptr(int16_ptr)
 end
