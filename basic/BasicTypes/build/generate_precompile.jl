@@ -35,7 +35,7 @@ begin
     arr_pointer = Ptr{Cint}(pointer_from_objref(arr))
     len_arr = Base.cconvert(Cint, length(arr))
     # please garbage collector, preserve my variables during execution
-    GC.@preserve arr test_array(pointer(arr), len_arr)
+    GC.@preserve arr test_array(arr_pointer, len_arr)
 
     test_simple_enum(BasicTypes.mySecondEnumType)
     test_complex_enum(BasicTypes.mySecondComplexEnumType)
