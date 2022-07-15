@@ -1,4 +1,5 @@
-compiled
+.vscode/
+compiled/
 *.o
 basic-cpp.exe
 

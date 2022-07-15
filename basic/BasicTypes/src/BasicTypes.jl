@@ -92,7 +92,7 @@ module BasicTypes
     end
 
     Base.@ccallable function test_struct(mySimpleStruct::SimpleStruct)::SimpleStruct
-        @debug "Julia received SimpleStruct.SimpleStructId with value: $mySimpleStruct.SimpleStructId"
+        @debug "Julia received SimpleStruct.SimpleStructId with value: $(mySimpleStruct.SimpleStructId)"
         return mySimpleStruct
     end
 
@@ -107,8 +107,8 @@ module BasicTypes
     end
 
     Base.@ccallable function test_nested_structs(myParentStruct::ParentStruct)::ParentStruct
-        @debug "Julia received ParentStruct.ParentStructId with value: $ParentStruct.ParentStructId"
-        @debug "Julia received ParentStruct.myChildStruct.ChildStructId with value: $ParentStruct.myChildStruct.ChildStructId"
+        @debug "Julia received ParentStruct.ParentStructId with value: $(myParentStruct.ParentStructId)"
+        @debug "Julia received ParentStruct.myChildStruct.ChildStructId with value: $(myParentStruct.myChildStruct.ChildStructId)"
         return myParentStruct
     end
 
@@ -117,14 +117,12 @@ module BasicTypes
     #-----------------------------------------------------------------------------------------#
 
     # Note that this function doesn't copy the array but actually receives a pointer to the
-    # start of the array (myArrayPtr) and the size of the array (myArraySizePtr) which we need
+    # start of the array (myArrayPtr) and the size of the array (myArraySize) which we need
     # to correctly unload the data from the array
-    Base.@ccallable function test_array(myArrayPtr::Ptr{Cint}, myArraySizePtr::Ptr{Cint})::Cvoid
-        #when using an Array you first have to unload the size pointer and then unwrap the actual data
-        myArraySize = unsafe_load(myArraySizePtr)
-        myArray = unsafe_wrap(Array{Cint}, myArrayPtr, myArraySize)
+    Base.@ccallable function test_array(myArrayPtr::Ptr{Cint}, myArraySize::Cint)::Cvoid
+        myArray = unsafe_wrap(Array{Cint}, myArrayPtr, myArraySize, own=false)
         @debug "Julia received an array with size: $myArraySize"
-        @debug "Julia received the following array: %myArray"
+        @debug "Julia received the following array: $myArray"
     end
 
     #-----------------------------------------------------------------------------------------#

@@ -1,29 +1,42 @@
-# for testing, run as follows:
+# for testing, cd into BasicTypes folder and run as follows:
 # julia --startup-file=no --project=. build/generate_precompile.jl
 
 using BasicTypes
 
-test_boolean(UInt8(1))
-test_int16(Int16(1))
-test_int32(Int32(1))
-test_int64(Int64(1))
-test_uint16(UInt16(1))
-test_uint32(UInt32(1))
-test_uint64(UInt64(1))
-test_cfloat(Float32(1))
-test_cdouble(Float64(1))
+# enable debug printing
+ENV["JULIA_DEBUG"]=BasicTypes
 
-# CString as pointer
-c_string_ptr = Base.unsafe_convert(Cstring, "String") |> Ptr{UInt8}
-test_cstring(c_string_ptr)
+begin
+    test_boolean(UInt8(1))
+    test_int16(Int16(1))
+    test_int32(Int32(1))
+    test_int64(Int64(1))
+    test_uint16(UInt16(1))
+    test_uint32(UInt32(1))
+    test_uint64(UInt64(1))
+    test_cfloat(Float32(1))
+    test_cdouble(Float64(1))
 
-test_struct(BasicTypes.SimpleStruct(Cint(1)))
-test_nested_structs(
-    BasicTypes.ParentStruct(
-        Cint(1),
-        BasicTypes.ChildStruct(Cint(2)),
+    # CString as pointer
+    c_string_ptr = Base.unsafe_convert(Cstring, "String") |> Ptr{UInt8}
+    test_cstring(c_string_ptr)
+
+    test_struct(BasicTypes.SimpleStruct(Cint(1)))
+
+    test_nested_structs(
+        BasicTypes.ParentStruct(
+            Cint(1),
+            BasicTypes.ChildStruct(Cint(2)),
+        )
     )
-)
 
-arr = [1,2,3]
-test_array()
+    # pointers... https://giordano.github.io/blog/2019-05-03-julia-get-pointer-value/
+    arr = Cint[1,2,3]
+    arr_pointer = Ptr{Cint}(pointer_from_objref(arr))
+    len_arr = Base.cconvert(Cint, length(arr))
+    # please garbage collector, preserve my variables during execution
+    GC.@preserve arr test_array(pointer(arr), len_arr)
+
+    test_simple_enum(BasicTypes.mySecondEnumType)
+    test_complex_enum(BasicTypes.mySecondComplexEnumType)
+end

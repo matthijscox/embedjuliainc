@@ -51,7 +51,7 @@ const char* test_cstring(const char* myCString);
 SimpleStruct test_struct(SimpleStruct mySimpleStruct);
 ParentStruct test_nested_structs(ParentStruct myParentStruct);
 
-void test_array(int* myArrayPtr, int* myArraySizePtr);
+void test_array(int* myArrayPtr, int myArraySize);
 
 SimpleEnum test_simple_enum(SimpleEnum mySimpleEnum);
 ComplexEnum test_complex_enum(ComplexEnum myComplexEnum);

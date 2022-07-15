@@ -92,7 +92,7 @@ int main(int argc, char *argv[])
     int myArraySize = 5;
     int myArray[myArraySize] = {1, 3, 7, 13, 21};
     int* myArrayPtr = &myArray[0];
-    test_array(myArrayPtr, &myArraySize);
+    test_array(myArrayPtr, myArraySize);
 
     //-------------------------------------------------------------------------------------//
     //----------------------------------  Enumerations  -----------------------------------//
@@ -106,6 +106,7 @@ int main(int argc, char *argv[])
 
     // Notify Julia the program is about to terminate, it is not mandatory but it allows
     // julia time to cleanup pending write reqeuests and run all finalizers
-    jl_atexit_hook(0);
+    // jl_atexit_hook(0); // from julia.h
+    shutdown_julia(0); // julia_init.h comes with it's own shutdown function
     return 0;
 }
