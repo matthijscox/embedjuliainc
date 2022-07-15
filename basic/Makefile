@@ -36,10 +36,19 @@ LIB_PATH := $(LIB_DIR)/$(LIB_NAME)
 # only needed on Linux, not windows?
 # WLARGS := -Wl,-rpath,"$(JULIA_DIR)/lib" -Wl,-rpath,"$(JULIA_DIR)/lib/julia"
 
-# compiling and linking flags
+# compiling flags:
+# -O2 is a compiler optimization
+# -fPIE: https://stackoverflow.com/questions/2463150/what-is-the-fpie-option-for-position-independent-executables-in-gcc-and-ld
+# we want to use julia.h from your local julia installation
 CFLAGS+=-O2 -fPIE -I$(JULIA_DIR)/include/julia -I$(INCLUDE_DIR)
-LDFLAGS+=-lm -L$(LIB_DIR) -l$(NAME) -L$(JULIA_DIR)/lib -ljulia $(WLARGS)
 
+# linking flags
+# -lm - Compiles against the shared library libm (basic math library, mostly C only)
+# -L$(LIB_DIR) -l$(NAME): use our basic.dll compiled from Julia build.jl
+# -L$(JULIA_DIR)/lib -ljulia: use the julia library, seems it's included in the library directory, else get it from $(JULIA_DIR)/lib
+LDFLAGS+=-lm -L$(LIB_DIR) -l$(NAME) -L$(LIB_DIR) -ljulia $(WLARGS)
+
+# use the c++ compiler, for c use gcc
 CC = g++
 
 all: $(LIB_PATH) $(INCLUDES) build-cpp
