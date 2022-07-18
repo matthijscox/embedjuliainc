@@ -4,7 +4,7 @@
 using BasicTypes
 
 # enable debug printing
-ENV["JULIA_DEBUG"]=BasicTypes
+# ENV["JULIA_DEBUG"]=BasicTypes
 
 begin
     test_boolean(UInt8(1))
@@ -27,6 +27,7 @@ begin
         BasicTypes.ParentStruct(
             Cint(1),
             BasicTypes.ChildStruct(Cint(2)),
+            (Cint(1),Cint(3),Cint(7)),
         )
     )
 
@@ -44,4 +45,10 @@ begin
     ref_val = Ref{Int16}(Int16(15))
     int16_ptr = reinterpret(Ptr{Int16}, pointer_from_objref(ref_val))
     BasicTypes.test_int16_ptr(int16_ptr)
+
+    try
+        throw_basic_error()
+    catch e
+        # OK
+    end
 end

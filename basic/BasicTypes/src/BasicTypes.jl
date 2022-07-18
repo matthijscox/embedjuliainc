@@ -3,7 +3,7 @@ module BasicTypes
     # note that exporting is not necessary for the library, only for ease of use in generate_precompile.jl
     export test_boolean, test_int16, test_int32, test_int64, test_uint16, test_uint32, test_uint64
     export test_cfloat, test_cdouble, test_cstring, test_struct, test_nested_structs
-    export test_array, test_simple_enum, test_complex_enum
+    export test_array, test_simple_enum, test_complex_enum, throw_basic_error
 
     #-----------------------------------------------------------------------------------------#
     #-------------------------------------  Booleans  ----------------------------------------#
@@ -110,11 +110,13 @@ module BasicTypes
     struct ParentStruct
         ParentStructId::Cint
         myChildStruct::ChildStruct
+        staticArray::NTuple{3, Cint}
     end
 
     Base.@ccallable function test_nested_structs(myParentStruct::ParentStruct)::ParentStruct
         @debug "Julia received ParentStruct.ParentStructId with value: $(myParentStruct.ParentStructId)"
         @debug "Julia received ParentStruct.myChildStruct.ChildStructId with value: $(myParentStruct.myChildStruct.ChildStructId)"
+        @debug "Julia received ParentStruct.staticArray with value: $(myParentStruct.staticArray)"
         return myParentStruct
     end
 
@@ -163,6 +165,12 @@ module BasicTypes
     Base.@ccallable function test_complex_enum(myEnum::ComplexEnum)::ComplexEnum
         @debug "Julia received enum type with value: $myEnum"
         return myEnum
+    end
+
+    Base.@ccallable function throw_basic_error()::Cint
+        @debug "We now throw a generic ErrorException"
+        throw(ErrorException("this is an error"))
+        return 0
     end
 
 end # module

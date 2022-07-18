@@ -80,7 +80,7 @@ int main(int argc, char *argv[])
     std::cout << std::left << "C++ struct id: " << std::setw(8) << mySimpleStruct.SimpleStructId << " | Julia output: " << test_struct(mySimpleStruct).SimpleStructId << std::endl;
 
     ChildStruct myChildStruct = {8};
-    ParentStruct myParentStruct = {4, myChildStruct};
+    ParentStruct myParentStruct = {4, myChildStruct, {1, 3, 7}};
     std::cout << std::left << "C++ struct parent id: " << std::setw(1) << myParentStruct.ParentStructId << " | Julia output: " << test_nested_structs(myParentStruct).ParentStructId << std::endl;
     std::cout << std::left << "C++ struct child id: " << std::setw(2) << myParentStruct.myChildStruct.ChildStructId << " | Julia output: " << test_nested_structs(myParentStruct).myChildStruct.ChildStructId << std::endl;
 
@@ -103,6 +103,24 @@ int main(int argc, char *argv[])
 
     std::cout << std::left << "C++ enum: " << std::setw(13) << myFirstComplexEnumType << " | Julia output: " << test_complex_enum(myFirstComplexEnumType) << std::endl;
     std::cout << std::left << "C++ enum: " << std::setw(13) << mySecondComplexEnumType << " | Julia output: " << test_complex_enum(mySecondComplexEnumType) << std::endl;
+
+    //-------------------------------------------------------------------------------------//
+    //------------------------------------  Exceptions  -----------------------------------//
+    //-------------------------------------------------------------------------------------//
+
+    try
+    {
+        throw_basic_error();
+    }
+    catch (const std::exception& e)
+    {
+        std::cout << "\n a standard exception was caught, with message '"
+                  << e.what() << std::endl;
+    }
+    catch (...)
+    {
+        std::cout << "\n unknown exception caught" << std::endl;
+    }
 
     // Notify Julia the program is about to terminate, it is not mandatory but it allows
     // julia time to cleanup pending write reqeuests and run all finalizers

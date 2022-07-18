@@ -15,6 +15,7 @@ struct ParentStruct
 {
     int ParentStructId;
     ChildStruct myChildStruct;
+    int staticArray[3];
 };
 
 enum SimpleEnum
@@ -55,3 +56,5 @@ void test_array(int* myArrayPtr, int myArraySize);
 
 SimpleEnum test_simple_enum(SimpleEnum mySimpleEnum);
 ComplexEnum test_complex_enum(ComplexEnum myComplexEnum);
+
+int throw_basic_error();
