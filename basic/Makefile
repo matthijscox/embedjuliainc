@@ -53,6 +53,7 @@ CC = g++
 
 all: $(LIB_PATH) $(INCLUDES) build-cpp
 
+# Note: to see help for Julia flags use julia -h, or julia --help-hidden.
 $(LIB_PATH) $(INCLUDES): $(BUILD)/build.jl $(PKG_ROOT_DIR)/src/BasicTypes.jl
 	$(JULIA) --startup-file=no --project=$(PKG_ROOT_DIR) -e 'using Pkg; Pkg.instantiate()'
 	$(JULIA) --startup-file=no --project=$(BUILD) -e 'using Pkg; Pkg.instantiate()'
