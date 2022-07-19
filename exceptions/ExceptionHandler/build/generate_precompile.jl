@@ -24,15 +24,21 @@ begin
     input_ptr = get_ptr(input_value)
     output_ptr = get_ptr(output_value)
 
-    GC.@preserve input_value output_value result_code = divide_function(input_ptr, output_ptr)
+    GC.@preserve input_value output_value status = divide_function(input_ptr, output_ptr)
     @assert output_value[] == Cint(6)
-    @assert result_code == Cint(0)
+    @assert status.code == Cint(0)
+    @assert unsafe_string(status.errorMessage) |> isempty
 
+    # trigger the integer division error
     input_ptr = get_ptr(Ref{Cint}(Cint(0.0)))
-    GC.@preserve input_value output_value result_code = divide_function(input_ptr, output_ptr)
-    @assert result_code == Cint(3)
+    GC.@preserve input_value output_value status = divide_function(input_ptr, output_ptr)
+    @assert status.code == Cint(3)
+    msg = unsafe_string(status.errorMessage)
+    @assert msg == "DivideError: integer division error"
 
+    # trigger the generic error
     input_ptr = get_ptr(Ref{Cint}(Cint(20.0)))
-    GC.@preserve input_value output_value result_code = divide_function(input_ptr, output_ptr)
-    @assert result_code == Cint(2)
+    GC.@preserve input_value output_value status = divide_function(input_ptr, output_ptr)
+    @assert status.code == Cint(2)
+
 end

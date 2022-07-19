@@ -1,3 +1,8 @@
+struct Status
+{
+    int code;
+    const char* errorMessage;
+};
 
 int throw_basic_error();
-int divide_function(int* inputPtr, int* outputPtr);
+Status divide_function(int* inputPtr, int* outputPtr);

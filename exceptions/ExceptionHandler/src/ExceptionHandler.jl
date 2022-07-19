@@ -8,10 +8,15 @@ module ExceptionHandler
         return 0
     end
 
+    struct Status
+        code::Cint
+        errorMessage::Cstring
+    end
 
     # Example of how to turn exceptions into error codes.
-    Base.@ccallable function divide_function(inputPtr::Ptr{Cint}, outputPtr::Ptr{Cint})::Cint
+    Base.@ccallable function divide_function(inputPtr::Ptr{Cint}, outputPtr::Ptr{Cint})::Status
         resultCode::Cint = 0
+        msg::Cstring = Base.unsafe_convert(Cstring, "")
         try
             inputValue = unsafe_load(inputPtr)
             if inputValue > 10
@@ -21,10 +26,13 @@ module ExceptionHandler
             unsafe_store!(outputPtr, outputValue)
             @debug "We succesfully executed div(12, $inputValue)"
         catch e
+            # https://discourse.julialang.org/t/is-it-possible-to-get-an-exception-message-as-a-string/3201
+            msg_string = sprint(showerror, e)
+            msg = Base.unsafe_convert(Cstring, msg_string)
             resultCode = error_code(e)
             @debug "Converted error type $(typeof(e)) to integer $resultCode"
         end
-        return resultCode
+        return Status(resultCode, msg)
     end
 
     # you'll have to invent your own error codes here:

@@ -30,6 +30,16 @@ int main(int argc, char *argv[])
     }
 
     //-----------------------------------------------------------------------------------------//
+    //--------------------------- Handle errors via returned structure ------------------------//
+    //-----------------------------------------------------------------------------------------//
+
+    int inputValue = 0;
+    int outputValue = 0;
+    Status status = divide_function(&inputValue, &outputValue);
+    std::cout << "got status code: " << status.code << std::endl;
+    std::cout << "error message: " << status.errorMessage << std::endl;
+
+    //-----------------------------------------------------------------------------------------//
     //--------------------------- You cannot catch exceptions normally ------------------------//
     //-----------------------------------------------------------------------------------------//
 
