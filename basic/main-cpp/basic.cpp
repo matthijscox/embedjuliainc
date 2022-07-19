@@ -108,20 +108,6 @@ int main(int argc, char *argv[])
     //------------------------------------  Exceptions  -----------------------------------//
     //-------------------------------------------------------------------------------------//
 
-    try
-    {
-        throw_basic_error();
-    }
-    catch (const std::exception& e)
-    {
-        std::cout << "\n a standard exception was caught, with message '"
-                  << e.what() << std::endl;
-    }
-    catch (...)
-    {
-        std::cout << "\n unknown exception caught" << std::endl;
-    }
-
     // Notify Julia the program is about to terminate, it is not mandatory but it allows
     // julia time to cleanup pending write reqeuests and run all finalizers
     // jl_atexit_hook(0); // from julia.h

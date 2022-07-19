@@ -1,0 +1,4 @@
+name = "ExceptionHandler"
+uuid = "6b55ce77-a6f3-471b-a258-f19a303b2360"
+authors = ["Matthijs Cox <matthijs.cox@gmail.com>"]
+version = "0.1.0"
