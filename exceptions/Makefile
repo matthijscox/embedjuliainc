@@ -46,7 +46,7 @@ CFLAGS+=-O2 -fPIE -I$(JULIA_DIR)/include/julia -I$(INCLUDE_DIR)
 # -lm - Compiles against the shared library libm (basic math library, mostly C only)
 # -L$(LIB_DIR) -l$(NAME): use our .dll compiled from Julia build.jl
 # -L$(JULIA_DIR)/lib -ljulia: use the julia library, seems it's included in the library directory, else get it from $(JULIA_DIR)/lib
-LDFLAGS+=-lm -L$(LIB_DIR) -l$(NAME) -L$(LIB_DIR) -ljulia $(WLARGS)
+LDFLAGS+=-lm -L$(LIB_DIR) -l$(NAME) -ljulia $(WLARGS)
 
 # use the c++ compiler, for c use gcc
 CC = g++
