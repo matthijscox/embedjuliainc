@@ -47,16 +47,6 @@ int main(int argc, char *argv[])
     //     std::cout << "\n unknown exception caught" << std::endl;
     // }
 
-    // if (jl_exception_occurred())
-    // {
-    // jl_call2(jl_get_function(jl_base_module, "showerror"),
-    //             jl_stderr_obj(),
-    //             jl_exception_occurred());
-    // jl_printf(jl_stderr_stream(), "\n");
-    // //jl_atexit_hook(1);
-    // //exit(1);
-    // }
-
     //-----------------------------------------------------------------------------------------//
     //----------------------------------- JL_TRY/CATCH macros ---------------------------------//
     //-----------------------------------------------------------------------------------------//
@@ -67,27 +57,14 @@ int main(int argc, char *argv[])
     }
     JL_CATCH {
         jl_value_t *errs = jl_stderr_obj();
-        std::cout << "\n unknown exception caught" << std::endl;
-        //volatile int shown_err = 0;
-        //jl_printf(JL_STDERR, "error during bootstrap:\n");
-        // JL_TRY {
-        //     if (errs) {
-        //         jl_value_t *showf = jl_get_function(jl_base_module, "show");
-        //         if (showf != NULL) {
-        //             jl_call2(showf, errs, jl_current_exception());
-        //             jl_printf(JL_STDERR, "\n");
-        //             shown_err = 1;
-        //         }
-        //     }
-        // }
-        // JL_CATCH {
-        // }
-        // if (!shown_err) {
-        //     jl_static_show(JL_STDERR, jl_current_exception());
-        //     jl_printf(JL_STDERR, "\n");
-        // }
-        // jlbacktrace();
-        // jl_printf(JL_STDERR, "\n");
+        std::cout << "A Julia exception was caught" << std::endl;
+        if (errs) {
+            jl_value_t *showf = jl_get_function(jl_base_module, "showerror");
+            if (showf != NULL) {
+                jl_call2(showf, errs, jl_current_exception());
+                jl_printf(jl_stderr_stream(), "\n");
+            }
+        }
         return 1;
     }
 
