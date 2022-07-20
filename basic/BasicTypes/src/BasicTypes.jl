@@ -162,6 +162,8 @@ module BasicTypes
         # myFifthComplexEnumType = myFourthComplexEnumType
     end
 
+    # did not try CEnum yet: https://github.com/JuliaInterop/CEnum.jl
+
     Base.@ccallable function test_complex_enum(myEnum::ComplexEnum)::ComplexEnum
         @debug "Julia received enum type with value: $myEnum"
         return myEnum
