@@ -1,0 +1,4 @@
+name = "ExternalThreads"
+uuid = "579cdecf-c268-47cd-8231-bdbd2ccb03ed"
+authors = ["Matthijs Cox <matthijs.cox@gmail.com>"]
+version = "0.1.0"
