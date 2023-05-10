@@ -17,6 +17,8 @@ extern "C" {
 #include "threads_into_julia.h"
 
 std::mutex mtx;
+
+// Somehow these interfaces are not defined in julia.h, we're not exactly sure why
 extern void jl_enter_threaded_region();
 int8_t (jl_gc_safe_enter)(void);
 
@@ -33,20 +35,13 @@ bool CheckInit()
 }
 
 // initialize_julia(const char* cpath, const char* clibName)
-void initialize_julia()
+void initialize_julia(int argc, char *argv[])
 {
-	// std::string path(cpath);
-	// std::string libName(clibName);
 
 	mtx.lock();
 	if (!CheckInit())
 	{
-        // std::string sysimage_path("");
-        // sysimage_path = path + "/" + libName;
-
-        // jl_options.image_file = sysimage_path.c_str();
-        // julia_init(JL_IMAGE_JULIA_HOME);
-        init_julia();
+        init_julia(argc, argv);
 
         if (jl_get_pgcstack() == NULL)
             jl_adopt_thread();
@@ -69,8 +64,8 @@ void call_and_catch(int x)
     // JL_TRY requires the thread to be adopted, else it won't work
 	JL_TRY
 	{
-		divide_function(1); // should always work
 		divide_function(x); // may throw an error depending on your input
+		std::cout << "Succeeded for x = " << x << std::endl;
 	}
 	JL_CATCH
 	{
@@ -78,17 +73,14 @@ void call_and_catch(int x)
 	}
 }
 
-int main()
+int main(int argc, char *argv[])
 {
 	const size_t n_of_threads(15);
-    initialize_julia();
-	// std::string path("");
-    // std::string libName("libJuliaError.so");
-    // initialize_julia(path.c_str(),libName.c_str());
+    initialize_julia(argc, argv);
 
 	std::thread all_threads[n_of_threads];
 	for(int i=0; i<n_of_threads; i++)
-		all_threads[i] = std::thread(call_and_catch, 30);
+		all_threads[i] = std::thread(call_and_catch, i+1);
 
 	for(auto& thread : all_threads)
 		thread.join();

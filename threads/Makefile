@@ -41,14 +41,14 @@ LIB_PATH := $(LIB_DIR)/$(LIB_NAME)
 # -O2 is a compiler optimization
 # -fPIE: https://stackoverflow.com/questions/2463150/what-is-the-fpie-option-for-position-independent-executables-in-gcc-and-ld
 # we want to use julia.h from your local julia installation
-CFLAGS+=-O2 -fPIE -I$(JULIA_DIR)/include/julia -I$(INCLUDE_DIR)
+CFLAGS+=-O2 -I$(JULIA_DIR)/include/julia -I$(INCLUDE_DIR)
 
 # linking flags
 # -lm - Compiles against the shared library libm (basic math library, mostly C only)
 # -lpthread shared library for threading
 # -L$(LIB_DIR) -l$(NAME): use our .dll compiled from Julia build.jl
 # -L$(JULIA_DIR)/lib -ljulia: use the julia library, seems it's included in the library directory, else get it from $(JULIA_DIR)/lib
-LDFLAGS+=-lm -lpthread -L$(LIB_DIR) -l$(NAME) -ljulia $(WLARGS)
+LDFLAGS+=-lpthread -lm -L$(LIB_DIR) -l$(NAME) -ljulia -ljulia-internal $(WLARGS)
 
 # use the c++ compiler, for c use gcc
 CC = g++

@@ -7,10 +7,10 @@ using ExternalThreads
 
 begin
 
-    divide_function(5)
+    divide_function(Int32(5))
 
     try
-        divide_function(12)
+        divide_function(Int32(12))
     catch e
         println("caught error")
     end
